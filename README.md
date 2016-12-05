@@ -1,24 +1,33 @@
 # Eltd
 
-**TODO: Add description**
+Command-line ultilities to manage concurrent app workflows.
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed as:
+  Prerequiste: Erlang and mix (optional) have to be installed.
 
-  1. Add `eltd` to your list of dependencies in `mix.exs`:
+  1. Run escript install:
 
-    ```elixir
-    def deps do
-      [{:eltd, "~> 0.1.0"}]
-    end
+    ```
+    mix escript.install
     ```
 
-  2. Ensure `eltd` is started before your application:
+  2. Append "/Users/jkwan/.mix/escripts" to your PATH
 
-    ```elixir
-    def application do
-      [applications: [:eltd]]
-    end
-    ```
+  3. Run the program
 
+
+     eltd
+
+  OR
+
+  1. Just run it
+
+    ./eltd
+
+## Usage
+
+  ```
+  usage: eltd [checkout | co] <branch>            # Checkout branch concurrently
+         eltd [execute | e] "<command string>"    # Run any command concurrently
+  ```
