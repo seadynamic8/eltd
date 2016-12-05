@@ -1,6 +1,6 @@
 # Eltd
 
-Command-line ultilities to manage concurrent app workflows.
+Command-line utilities to manage concurrent app workflows.
 
 ## Installation
 
@@ -16,14 +16,17 @@ Command-line ultilities to manage concurrent app workflows.
 
   3. Run the program
 
-
-     eltd
+    ```
+    eltd
+    ```
 
   OR
 
-  1. Just run it
+  Just run it (with Erlang installed)
 
+    ```
     ./eltd
+    ```
 
 ## Usage
 
