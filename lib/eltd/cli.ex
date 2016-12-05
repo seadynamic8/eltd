@@ -1,8 +1,14 @@
 defmodule Eltd.CLI do
+  @moduledoc """
+    These are command-line ultilities to manage concurrent app workflows.
 
-  # @default_apps ["teladoc_framework", "provider", "admin", "member", "client"]
-  @root_dir "/home/jkwan/Code/Elixir/git_test/"
-  @default_apps ["member", "client"]
+    Right now, this is setup so that it assumes that you all the @default_apps
+    in the same directory level.  Also that you run this program from one of
+    those directories.
+  """
+
+  # @default_apps ["member", "client"]
+  @default_apps ["teladoc_framework", "provider", "admin", "member", "client"]
 
   alias Eltd.GitHandler
   alias Eltd.Command
@@ -19,7 +25,7 @@ defmodule Eltd.CLI do
                                         message: :string,
                                         apps: :string
                                       ],
-                                     aliases: 
+                                     aliases:
                                       [ h: :help,
                                         m: :message,
                                         a: :apps
@@ -45,10 +51,6 @@ defmodule Eltd.CLI do
   def process({ :checkout, branch }) do
     working_directory = get_current_directory
 
-    # Temporary for testing
-    # should assume that we are in one of the apps directories already.
-    File.cd "#{@root_dir}#{List.first(@default_apps)}"
-
     @default_apps
     |> Enum.map(fn app ->
         Task.async(fn -> GitHandler.process(app, branch) end)
@@ -63,10 +65,6 @@ defmodule Eltd.CLI do
 
   def process({ :execute, command_str }) do
     working_directory = get_current_directory
-
-    # Temporary for testing
-    # should assume that we are in one of the apps directories already.
-    File.cd "#{@root_dir}#{List.first(@default_apps)}"
 
     [ command | args ] = command_str |> String.split
 
