@@ -5,7 +5,7 @@ defmodule Eltd.GitHandler do
   def process(app, branch) do
     state = %{app: app,
               target_branch: branch,
-              git_status: 
+              git_status:
                 %{full_message: "", current_branch: "", commit_status: :clean}
               }
 
@@ -21,9 +21,13 @@ defmodule Eltd.GitHandler do
       :unexpected ->
         IO.puts "#{app}: Unexpected git status: "
         print_git_status(state)
-      _ -> nil
+      :current_branch -> nil # No output necessary
+      :clean -> nil # No output necessary
+      _ -> IO.puts "#{app}: Error - unexpected after status: #{status}"
     end
   end
+  def process_after(other), do:
+    raise "Can't call process_after without a state map: #{inspect(other)}"
 
   defp set_git_status(state) do
     git_status = get_status(state)
@@ -41,10 +45,22 @@ defmodule Eltd.GitHandler do
   end
 
   defp parse_git_status(git_status) do
-    [ "On branch " <> current_branch, commit_status | _rest ] = 
-        String.split(git_status, "\n")
-    
+    [ "On branch " <> current_branch | rest_of_status ] =
+      String.split(git_status, "\n")
+
+    commit_status = parse_commit_status(rest_of_status)
+
     [ current_branch, commit_status ]
+  end
+
+  defp parse_commit_status([ "Your branch" <> _ , "  (use" <> _ , commit_status | _rest]) do
+    commit_status
+  end
+  defp parse_commit_status([ "Your branch" <> _, commit_status | _rest]) do
+    commit_status
+  end
+  defp parse_commit_status([ commit_status | _rest ]) do
+    commit_status
   end
 
   defp parse_commit_status(commit_status) do
@@ -71,6 +87,7 @@ defmodule Eltd.GitHandler do
         :clean -> checkout_or_create_branch(state)
         :staged -> IO.puts "#{app}: Staged uncommited changes"
         :unstaged -> IO.puts "#{app}: Uncommited changes"
+        _ -> nil
       end
       state
     end
@@ -78,7 +95,7 @@ defmodule Eltd.GitHandler do
 
   defp handle_current_branch(%{app: app, target_branch: branch} = state) do
     IO.puts "#{app}: #{branch} is the current branch."
-    %{ state | git_status: %{ commit_status: :noop }}
+    %{ state | git_status: %{ commit_status: :current_branch }}
   end
 
   defp checkout_or_create_branch(%{app: app, target_branch: branch} = state) do
