@@ -19,8 +19,6 @@ defmodule Eltd.Config do
     end
   end
 
-  def return_to_original_directory(directory), do: File.cd directory
-
   defp working_directory_set_in_config do
     case read_config(:top_level_directory) do
       :not_set -> :not_set

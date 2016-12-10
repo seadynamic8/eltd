@@ -53,7 +53,7 @@ defmodule Eltd.CLI do
 
     IO.puts "\nFinished! :)"
 
-    Config.return_to_original_directory(working_directory)
+    return_to_original_directory(working_directory)
   end
 
   def process({ :execute, command_str }) do
@@ -73,7 +73,9 @@ defmodule Eltd.CLI do
 
     IO.puts "\nFinished! :)"
 
-    Config.return_to_original_directory(working_directory)
+    return_to_original_directory(working_directory)
   end
+
+  def return_to_original_directory(directory), do: File.cd directory
 
 end
