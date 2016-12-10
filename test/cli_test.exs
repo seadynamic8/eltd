@@ -43,11 +43,10 @@ defmodule CLITest do
 
   describe "process({:execute, command_str})" do
 
-    test "returns to original directory if set top_level_directory" do
-      org_directory = Application.get_env(:eltd, :top_level_directory) <> 
-                      "/" <> List.first(Application.get_env(:eltd, :default_apps))
+    test "returns to original directory" do
+      org_directory = Path.expand("~/Teladoc/admin")
       capture_io(fn -> process({:execute, "git status"}) end)
-      assert File.cwd! == org_directory
+      assert Path.expand("~/Teladoc/admin") == org_directory
     end
   end
 end
