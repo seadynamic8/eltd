@@ -97,7 +97,7 @@ defmodule Eltd.CLI do
         IO.puts "not set"
         :not_set
       config_value ->
-        config_value <> "/" <> List.first(@default_apps)
+        Path.expand(config_value) <> "/" <> List.first(apps)
     end
   end
 
