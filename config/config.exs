@@ -8,6 +8,7 @@ config :porcelain, driver: Porcelain.Driver.Basic
 config :eltd, 
   default_apps: ["teladoc_framework", "provider", "admin", "member", "client"]
 
+# Location for config file where user overridable (runtime) settings can be set.
 config :eltd, user_config_file: "~/.mix/escripts/config.exs"
 
 # This configuration is loaded before any dependency and is restricted
