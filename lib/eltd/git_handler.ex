@@ -1,6 +1,5 @@
 defmodule Eltd.GitHandler do
 
-  alias Eltd.Command
   alias Eltd.GitStatus
   alias Eltd.GitBranch
   alias Eltd.GitCommit

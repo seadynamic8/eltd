@@ -5,6 +5,11 @@ use Mix.Config
 config :logger, compile_time_purge_level: :info
 config :porcelain, driver: Porcelain.Driver.Basic
 
+config :eltd, 
+  default_apps: ["teladoc_framework", "provider", "admin", "member", "client"]
+
+config :eltd, config_dir: "~/.mix/escripts"
+
 # This configuration is loaded before any dependency and is restricted
 # to this project. If another project depends on this project, this
 # file won't be loaded nor affect the parent project. For this reason,
@@ -30,4 +35,4 @@ config :porcelain, driver: Porcelain.Driver.Basic
 # Configuration from the imported file will override the ones defined
 # here (which is why it is important to import them last).
 #
-#     import_config "#{Mix.env}.exs"
+# import_config "#{Mix.env}.exs"

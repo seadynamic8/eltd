@@ -17,7 +17,7 @@ defmodule Eltd.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger, :porcelain]]
+    [applications: [:mix, :logger, :porcelain]]
   end
 
   # Dependencies can be Hex packages:

@@ -1,5 +1,7 @@
 defmodule Eltd.GitBranch do
 
+  alias Eltd.Command
+
   def current_branch?(%{target_branch: target_branch, 
       git_status: %{current_branch: current_branch}}) do
     target_branch == current_branch

@@ -22,7 +22,7 @@ defmodule Eltd.GitStatus do
     status
   end
 
-  defp parse_status(git_status) do
+  defp parse_status(status) do
     [ "On branch " <> current_branch | rest_of_status ] =
       String.split(status, "\n")
 

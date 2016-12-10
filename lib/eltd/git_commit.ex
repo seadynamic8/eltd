@@ -1,5 +1,7 @@
 defmodule Eltd.GitCommit do
 
+  alias Eltd.Command
+
   def add_and_commit_changes(%{app: app} = state) do
     IO.puts "-> Adding changes."
     Command.git ["add", "."], app

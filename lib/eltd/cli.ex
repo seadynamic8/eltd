@@ -7,9 +7,6 @@ defmodule Eltd.CLI do
     those directories.
   """
 
-  # @default_apps ["member", "client"]
-  @default_apps ["teladoc_framework", "provider", "admin", "member", "client"]
-
   alias Eltd.GitHandler
   alias Eltd.Command
 
@@ -32,7 +29,7 @@ defmodule Eltd.CLI do
                                       ])
     case parse do
       { [ help: true ], _, _ }        -> :help
-      { _, [ "checkout", branch ], _} -> { :checkout, branch, }
+      { _, [ "checkout", branch ], _} -> { :checkout, branch }
       { _, [ "co", branch ], _}       -> { :checkout, branch }
       { _, [ "execute", command ], _} -> { :execute, command }
       { _, [ "e", command ], _}       -> { :execute, command }
@@ -42,16 +39,16 @@ defmodule Eltd.CLI do
 
   def process(:help) do
     IO.puts """
-    usage: eltd [checkout | co] <branch>
-           eltd [execute | e] "<command string>"
+    usage: eltd [checkout | co] <branch>          # Checkout branch concurrently across apps
+           eltd [execute | e] "<command string>"  # Execute command concurrently across apps
     """
-    System.halt(0)
+    # System.halt(0)
   end
 
   def process({ :checkout, branch }) do
-    working_directory = get_current_directory
+    working_directory = get_or_set_working_directory
 
-    @default_apps
+    apps
     |> Enum.map(fn app ->
         Task.async(fn -> GitHandler.process(app, branch) end)
       end)
@@ -64,11 +61,11 @@ defmodule Eltd.CLI do
   end
 
   def process({ :execute, command_str }) do
-    working_directory = get_current_directory
+    working_directory = get_or_set_working_directory
 
     [ command | args ] = command_str |> String.split
 
-    @default_apps
+    apps
     |> Enum.map(fn app ->
         Task.async(fn -> Command.execute(command, args, app) end)
       end)
@@ -81,6 +78,46 @@ defmodule Eltd.CLI do
     IO.puts "\nFinished! :)"
 
     return_to_original_directory(working_directory)
+  end
+
+  defp get_or_set_working_directory do
+    case working_directory_set_in_config do
+      :not_set ->
+        get_current_directory
+      working_directory ->
+        IO.puts "Changing directory to config + first app: #{working_directory}"
+        File.cd! working_directory
+        working_directory
+    end
+  end
+
+  def working_directory_set_in_config do
+    case read_config(:top_level_directory) do
+      nil -> 
+        IO.puts "not set"
+        :not_set
+      config_value ->
+        config_value <> "/" <> List.first(@default_apps)
+    end
+  end
+
+  def read_config(key) do
+    case Mix.Config.read!(config_file) do
+      [eltd: config] -> config[key]
+      [] -> nil
+    end
+  end
+
+  def config_file do
+    config_dir = Application.get_env(:eltd, :config_dir)
+    Path.expand("#{config_dir}/config.exs")
+  end
+
+  def apps do
+    case read_config(:default_apps) do
+      nil -> Application.get_env(:eltd, :default_apps)
+      list -> list
+    end
   end
 
   defp get_current_directory, do: File.cwd!
