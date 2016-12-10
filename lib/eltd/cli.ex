@@ -1,14 +1,9 @@
 defmodule Eltd.CLI do
   @moduledoc """
     These are command-line ultilities to manage concurrent app workflows.
-
-    Right now, this is setup so that it assumes that you all the @default_apps
-    in the same directory level.  Also that you run this program from one of
-    those directories.
   """
 
-  @default_apps Application.get_env(:eltd, :default_apps)
-
+  alias Eltd.Config
   alias Eltd.GitHandler
   alias Eltd.Command
 
@@ -44,13 +39,12 @@ defmodule Eltd.CLI do
     usage: eltd [checkout | co] <branch>          # Checkout branch concurrently across apps
            eltd [execute | e] "<command string>"  # Execute command concurrently across apps
     """
-    # System.halt(0)
   end
 
   def process({ :checkout, branch }) do
-    working_directory = get_or_set_working_directory
+    working_directory = Config.get_or_set_working_directory
 
-    apps
+    Config.apps
     |> Enum.map(fn app ->
         Task.async(fn -> GitHandler.process(app, branch) end)
       end)
@@ -59,15 +53,15 @@ defmodule Eltd.CLI do
 
     IO.puts "\nFinished! :)"
 
-    return_to_original_directory(working_directory)
+    Config.return_to_original_directory(working_directory)
   end
 
   def process({ :execute, command_str }) do
-    working_directory = get_or_set_working_directory
+    working_directory = Config.get_or_set_working_directory
 
     [ command | args ] = command_str |> String.split
 
-    apps
+    Config.apps
     |> Enum.map(fn app ->
         Task.async(fn -> Command.execute(command, args, app) end)
       end)
@@ -79,45 +73,7 @@ defmodule Eltd.CLI do
 
     IO.puts "\nFinished! :)"
 
-    return_to_original_directory(working_directory)
+    Config.return_to_original_directory(working_directory)
   end
-
-  defp get_or_set_working_directory do
-    case working_directory_set_in_config do
-      :not_set -> get_current_directory
-      working_directory ->
-        IO.puts "Changing directory to top_level_directory / first app: #{working_directory}"
-        File.cd! working_directory
-        working_directory
-    end
-  end
-
-  def working_directory_set_in_config do
-    case read_config(:top_level_directory) do
-      :not_set -> :not_set
-      top_level_directory ->
-        Path.expand(top_level_directory) <> "/" <> List.first(@default_apps)
-    end
-  end
-
-  def apps do
-    case read_config(:default_apps) do
-      :not_set -> @default_apps
-      list -> list
-    end
-  end
-
-  def read_config(key) do
-    case Mix.Config.read!(config_file) do
-      [eltd: config] -> config[key]
-      [] -> :not_set
-    end
-  end
-
-  def config_file, do: Application.get_env(:eltd, :user_config_file) |> Path.expand
-
-  defp get_current_directory, do: File.cwd!
-
-  defp return_to_original_directory(directory), do: File.cd directory
 
 end
