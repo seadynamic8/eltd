@@ -87,7 +87,7 @@ Need to call it config.exs and use Mix.Config format
 
 Example file:  
 ```
-use Mix.Config  # Need to to app this
+use Mix.Config  # Need to add this
 
 config :eltd, default_apps: ["member", "client"]
 
