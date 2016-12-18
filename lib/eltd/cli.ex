@@ -59,7 +59,7 @@ defmodule Eltd.CLI do
   def process({ :execute, command_str }) do
     working_directory = get_or_set_working_directory
 
-    [ command | args ] = command_str |> String.split
+    { command, args } = Command.parse_command(command_str)
 
     Config.apps
     |> Enum.map(fn app ->
@@ -92,5 +92,7 @@ defmodule Eltd.CLI do
   def return_to_original_directory(directory), do: File.cd directory
 
   defp get_current_directory, do: File.cwd!
+
+  
 
 end
