@@ -2,10 +2,14 @@ defmodule Eltd.Config do
 
   @default_apps Application.get_env(:eltd, :default_apps)
 
-  def apps do
-    case read_config(:default_apps) do
-      :not_set -> @default_apps
-      list -> list
+  def get_apps(custom_apps) do
+    if custom_apps == [] do
+      case read_config(:default_apps) do
+        :not_set -> @default_apps
+        list -> list
+      end
+    else
+      custom_apps
     end
   end
 
