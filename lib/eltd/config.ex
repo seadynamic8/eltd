@@ -30,9 +30,13 @@ defmodule Eltd.Config do
   end
 
   defp read_config(key) do
-    case Mix.Config.read!(config_file) do
-      [eltd: config] -> parse_app_config(config[key])
-      [] -> :not_set
+    try do
+      case Mix.Config.read!(config_file) do
+        [eltd: config] -> parse_app_config(config[key])
+        [] -> :not_set
+      end
+    catch
+      :error, _ -> :not_set
     end
   end
 
