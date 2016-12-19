@@ -11,6 +11,8 @@ config :eltd,
 # Location for config file where user overridable (runtime) settings can be set.
 config :eltd, user_config_file: "~/.mix/escripts/config.exs"
 
+config :eltd, commit_message: "temp commit"
+
 # This configuration is loaded before any dependency and is restricted
 # to this project. If another project depends on this project, this
 # file won't be loaded nor affect the parent project. For this reason,

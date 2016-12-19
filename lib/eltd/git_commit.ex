@@ -1,6 +1,7 @@
 defmodule Eltd.GitCommit do
 
   alias Eltd.Command
+  alias Eltd.Config
 
   def add_and_commit_changes(%{app: app} = state) do
     IO.puts "-> Adding changes."
@@ -9,8 +10,9 @@ defmodule Eltd.GitCommit do
   end
 
   def commit_changes(%{app: app}) do
-    IO.puts "-> Commiting changes as 'temp commit'"
-    Command.git ["commit", "-m", "temp commit"], app
+    commit_msg = Config.commit_message
+    IO.puts "-> Commiting changes as '#{commit_msg}'"
+    Command.git ["commit", "-m", commit_msg], app
   end
 
   def prompt_user_to_commit? do

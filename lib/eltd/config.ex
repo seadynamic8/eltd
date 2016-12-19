@@ -1,6 +1,7 @@
 defmodule Eltd.Config do
 
   @default_apps Application.get_env(:eltd, :default_apps)
+  @commit_message Application.get_env(:eltd, :commit_message)
 
   def get_apps(custom_apps) do
     if custom_apps == [] do
@@ -21,10 +22,24 @@ defmodule Eltd.Config do
     end
   end
 
+  def commit_message do
+    case read_config(:commit_message) do
+      :not_set -> @commit_message
+      message -> message
+    end
+  end
+
   defp read_config(key) do
     case Mix.Config.read!(config_file) do
-      [eltd: config] -> config[key]
+      [eltd: config] -> parse_app_config(config[key])
       [] -> :not_set
+    end
+  end
+
+  def parse_app_config(app_config) do
+    case app_config do
+      nil -> :not_set
+      value -> value
     end
   end
 

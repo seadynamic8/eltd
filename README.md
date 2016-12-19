@@ -77,6 +77,8 @@ Shorthand for apps:
 
 ```
 default_apps: ["teladoc_framework", "provider", "admin", "member", "client"]
+
+commit_message: "temp commit"  # For checkout command
 ```
 
 ### Configuration file:
@@ -90,6 +92,8 @@ Example file:
 use Mix.Config  # Need to add this
 
 config :eltd, default_apps: ["member", "client"]
+
+config :eltd, commit_message: "a new commit message"  # For checkout command
 
 config :eltd, top_level_directory: "~/Code/Teladoc/"  # Setting this allows you to run
                                                       # the program from another directory.
@@ -110,7 +114,3 @@ If you want to only a local instance of the program
 ```
 mix escript.build
 ```
-
-## Planned Improvements
-
-* Allow for custom message instead of 'temp commit'

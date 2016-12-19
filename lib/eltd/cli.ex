@@ -16,12 +16,10 @@ defmodule Eltd.CLI do
   def parse_args(argv) do
     parse = OptionParser.parse(argv, switches:
                                       [ help: :boolean,
-                                        message: :string,
                                         apps: :string
                                       ],
                                      aliases:
                                       [ h: :help,
-                                        m: :message,
                                         a: :apps
                                       ])
     case parse do
