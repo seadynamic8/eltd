@@ -1,12 +1,10 @@
 defmodule Eltd.Command do
 
   def git(args, app) do
-    # System.cmd "git", args, cd: cd_dir(app)
     execute("git", args, app)
   end
 
   def execute(command, args, app) do
-      # System.cmd "command", args, get_opts(app)
     try do
       case Porcelain.exec command, args, [err: :out] ++ cd_dir(app) do
         %Porcelain.Result{ out: message } ->
