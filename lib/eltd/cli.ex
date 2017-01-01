@@ -45,7 +45,7 @@ defmodule Eltd.CLI do
 
   def process(:help) do
     IO.puts """
-    usage: eltd [checkout | co] <branch>           # Checkout branch concurrently across apps
+    usage: eltd [checkout | co] <branch>           # Checkout (or create) branch concurrently across apps
            eltd [execute | ex] "<command string>"  # Execute command concurrently across apps
 
     Options:
@@ -53,7 +53,7 @@ defmodule Eltd.CLI do
     <comma seperated apps>  # List of comma seperated apps.  Ex: admin,client,provider
                             # Abbreviations: a = admin, c = client, cc = callcenter
                             # Example: -a a,p,m
-                            #   - Look in README for full list     
+                            #   - Look in README for full list
     """
   end
 
@@ -116,7 +116,7 @@ defmodule Eltd.CLI do
   def return_to_original_directory(directory), do: File.cd directory
 
   defp get_current_directory, do: File.cwd!
-  
+
   def parse_custom_apps(apps_str) do
     apps_str
     |> String.split(",")

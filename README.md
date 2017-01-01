@@ -3,7 +3,7 @@
 Command-line utilities to manage concurrent app workflows.
 
 Currently 2 functions:
-* Checkout branch concurrently across apps (safely)
+* Checkout (or create) branch concurrently across apps (safely)
 * Execute command concurrently across apps
 
 What does safely mean?
@@ -87,7 +87,7 @@ Optional configuration file can be created in ~/.mix/escripts/
 
 Need to call it config.exs and use Mix.Config format
 
-Example file:  
+Example file:
 ```
 use Mix.Config  # Need to add this
 
