@@ -33,10 +33,17 @@ defmodule Eltd.Command do
   end
 
   def parse_command(command_str) do
-    [ command | [ rest_of_command ] ] = command_str |> String.split(" ", parts: 2)
-    args = extract_args(rest_of_command)
+    split_command = command_str |> String.split(" ", parts: 2)
 
-    { command, args }
+    if has_args?(split_command) do
+      [ command | [ rest_of_command ] ] = split_command
+
+      { command, extract_args(rest_of_command) }
+    else
+      command = split_command |> List.first
+
+      { command, [] }
+    end
   end
 
   defp cd_dir(app) do
@@ -49,6 +56,10 @@ defmodule Eltd.Command do
 
   defp current_app_dir do
     System.cwd |> Path.basename
+  end
+
+  defp has_args?(split_command) do
+    length(split_command) > 1
   end
 
   defp extract_args(rest_of_command) do
